@@ -8,7 +8,6 @@
         <title>listview-Demo</title>
         <link rel="stylesheet" href="../../fox-core/dist/foxui.css">
         <link rel="stylesheet" href="../dist/css/fox-css.css"/>
-        <script src="js/fastclick.js"></script>
         <script src="../../fox-core/dist/foxui.js"></script>
         <link rel="import" href="../../fox-content/dist/fox-content.html"/>
         <link rel="import" href="../../fox-icon/dist/fox-icon.html"/>
@@ -16,7 +15,6 @@
         <link rel="import" href="../../fox-toolbar/dist/fox-toolbar.html"/>
         <link rel="import" href="../../fox-page-content/dist/fox-page-content.html"/>
         <link rel="import" href="../../fox-toggle/src/fox-toggle.html">
-        <script src="js/app.js"></script>
     </head>
     <body>
         <fox-page id="recommend">
@@ -29,7 +27,7 @@
 
             <fox-page-content class="fox-theme-ios">
                 <ul class="fox-listview">
-                    <li class="fox-listview-item">
+                    <li class="fox-listview-item" >
                         <a href="">
                             <span class="item-icon" >
                                 <img class="item-icon-img" src="img/1.png" alt=""/>
@@ -45,21 +43,29 @@
                         </a>
                     </li>
                     <li class="fox-listview-item">
-                        <a href="">
+                        <a href="" class="swipe-left">
                             <span class="item-icon icon-pages"></span>
                             <div class="item-body">
-                                pages
+                                swipe
                             </div>
                         </a>
+                        <div class="item-menu">
+                            <span>更多</span>
+                            <span class="b-red">删除</span>
+                        </div>
                     </li>
                 </ul>
                 <ul class="fox-listview">
                     <li class="fox-listview-item">
-                        <a href="">
+                        <a href="" class="swipe-left">
                             <div class="item-body">
                                 show time
                             </div>
                         </a>
+                        <div class="item-menu">
+                            <span>更多</span>
+                            <span class="b-red">删除</span>
+                        </div>
                     </li>
                     <li class="fox-listview-item">
                         <a href="">
@@ -110,4 +116,58 @@
 
 
     </body>
+    <script type="text/javascript">
+        window.onload = function(){
+            var foxCss = {};
+            foxCss.menu_swipeLeft = function(){
+                //获得class
+                function getElementsByClassName(_className,_tag){
+                    var classElements=[],allElements= arguments.length > 1 ? document.getElementsByTagName(_tag) : document.getElementsByTagName('*');
+                    for(var i=0;i<allElements.length;i++){
+                        if(allElements[i].className == _className){
+                            classElements[classElements.length]=allElements[i];
+                        }
+                    }
+                    return classElements;
+                }
+                /*swipe to show item-menu*/
+                var swipeDoms = getElementsByClassName("swipe-left","a");
+                var touchStart = function(e){
+                    isdrag = true;
+                    e.preventDefault();
+                    var touch = e.touches[0];
+                    startX = touch.pageX;
+                    if(this.style.left < 0){
+
+                    }
+                };
+                var touchMove = function(e){
+                    if (isdrag){
+                        e.preventDefault();//阻止滚动
+                        var touch = e.touches[0];
+                        var x = touch.pageX - startX;
+                        this.style.left = x + 'px';
+                        if(x <= -135){
+                            tl = -135 + 'px';
+                            isdrag = false;
+                        }else if(x > 0){
+                            isdrag = false;
+                        }else {
+                            isdrag = true;
+                        }
+                    }
+                }
+                var L = swipeDoms.length;
+                for(var i = 0; i < L; i++){
+                    swipeDoms[i].addEventListener('touchstart',touchStart);
+                    swipeDoms[i].addEventListener('touchmove',touchMove);
+                    swipeDoms[i].addEventListener('touchend',function(){
+
+                    });
+                }
+            }
+
+            foxCss.menu_swipeLeft();
+        }
+    </script>
 </html>
